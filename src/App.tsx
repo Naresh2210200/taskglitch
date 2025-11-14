@@ -1,15 +1,16 @@
 import { Alert, Avatar, Box, Button, CircularProgress, Container, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import MetricsBar from '@/components/MetricsBar';
 import TaskTable from '@/components/TaskTable';
 import UndoSnackbar from '@/components/UndoSnackbar';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, type ChangeEvent } from 'react';
 import { UserProvider, useUser } from '@/context/UserContext';
 import { TasksProvider, useTasksContext } from '@/context/TasksContext';
 import ChartsDashboard from '@/components/ChartsDashboard';
 import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import ActivityLog, { ActivityItem } from '@/components/ActivityLog';
 import { downloadCSV, toCSV } from '@/utils/csv';
-import type { Task } from '@/types';
+import type { DerivedTask, Task } from '@/types';
 import {
   computeAverageROI,
   computePerformanceGrade,
@@ -101,14 +102,14 @@ function AppContent() {
           )}
           {!loading && !error && (
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }}>
-              <TextField placeholder="Search by title" value={q} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQ(e.target.value)} fullWidth />
-              <Select value={fStatus} onChange={(e: any) => setFStatus(e.target.value)} displayEmpty sx={{ minWidth: 180 }}>
+              <TextField placeholder="Search by title" value={q} onChange={(e: ChangeEvent<HTMLInputElement>) => setQ(e.target.value)} fullWidth />
+              <Select value={fStatus} onChange={(e: SelectChangeEvent<string>) => setFStatus(e.target.value)} displayEmpty sx={{ minWidth: 180 }}>
                 <MenuItem value="All">All Statuses</MenuItem>
                 <MenuItem value="Todo">Todo</MenuItem>
                 <MenuItem value="In Progress">In Progress</MenuItem>
                 <MenuItem value="Done">Done</MenuItem>
               </Select>
-              <Select value={fPriority} onChange={(e: any) => setFPriority(e.target.value)} displayEmpty sx={{ minWidth: 180 }}>
+              <Select value={fPriority} onChange={(e: SelectChangeEvent<string>) => setFPriority(e.target.value)} displayEmpty sx={{ minWidth: 180 }}>
                 <MenuItem value="All">All Priorities</MenuItem>
                 <MenuItem value="High">High</MenuItem>
                 <MenuItem value="Medium">Medium</MenuItem>

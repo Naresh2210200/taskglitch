@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import {
   Button,
   Dialog,
@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import { Priority, Status, Task } from '@/types';
 
 interface Props {
@@ -76,6 +77,7 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
       priority: ((priority || 'Medium') as Priority),
       status: ((status || 'Todo') as Status),
       notes: notes.trim() || undefined,
+      createdAt: initial?.createdAt ?? new Date().toISOString(),
       ...(initial ? { id: initial.id } : {}),
     };
     onSubmit(payload);
@@ -90,7 +92,7 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
           <TextField
             label="Title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
             error={!!title && duplicateTitle}
             helperText={duplicateTitle ? 'Duplicate title not allowed' : ' '}
             required
@@ -101,7 +103,7 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
               label="Revenue"
               type="number"
               value={revenue}
-              onChange={e => setRevenue(e.target.value === '' ? '' : Number(e.target.value))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setRevenue(e.target.value === '' ? '' : Number(e.target.value))}
               inputProps={{ min: 0, step: 1 }}
               required
               fullWidth
@@ -110,7 +112,7 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
               label="Time Taken (h)"
               type="number"
               value={timeTaken}
-              onChange={e => setTimeTaken(e.target.value === '' ? '' : Number(e.target.value))}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setTimeTaken(e.target.value === '' ? '' : Number(e.target.value))}
               inputProps={{ min: 1, step: 1 }}
               required
               fullWidth
@@ -119,7 +121,7 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <FormControl fullWidth required>
               <InputLabel id="priority-label">Priority</InputLabel>
-              <Select labelId="priority-label" label="Priority" value={priority} onChange={e => setPriority(e.target.value as Priority)}>
+              <Select labelId="priority-label" label="Priority" value={priority} onChange={(e: SelectChangeEvent<Priority>) => setPriority(e.target.value as Priority)}>
                 {priorities.map(p => (
                   <MenuItem key={p} value={p}>{p}</MenuItem>
                 ))}
@@ -127,14 +129,14 @@ export default function TaskForm({ open, onClose, onSubmit, existingTitles, init
             </FormControl>
             <FormControl fullWidth required>
               <InputLabel id="status-label">Status</InputLabel>
-              <Select labelId="status-label" label="Status" value={status} onChange={e => setStatus(e.target.value as Status)}>
+              <Select labelId="status-label" label="Status" value={status} onChange={(e: SelectChangeEvent<Status>) => setStatus(e.target.value as Status)}>
                 {statuses.map(s => (
                   <MenuItem key={s} value={s}>{s}</MenuItem>
                 ))}
               </Select>
             </FormControl>
           </Stack>
-          <TextField label="Notes" value={notes} onChange={e => setNotes(e.target.value)} multiline minRows={2} />
+          <TextField label="Notes" value={notes} onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setNotes(e.target.value)} multiline minRows={2} />
         </Stack>
       </DialogContent>
       <DialogActions>
